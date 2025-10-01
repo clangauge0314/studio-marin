@@ -154,6 +154,8 @@ export const AuthProvider = ({ children }) => {
             isAnonymous: false
           }
           setUserProfile(userProfile)
+          // 로컬 스토리지에 이메일 저장 (랭킹용)
+          localStorage.setItem('currentUserEmail', userData.email)
         } else {
           // Firestore에 사용자 정보가 없으면 기본값 설정
           const userProfile = {
@@ -163,6 +165,7 @@ export const AuthProvider = ({ children }) => {
             isAnonymous: false
           }
           setUserProfile(userProfile)
+          localStorage.setItem('currentUserEmail', email)
         }
         
         setCurrentUser(result.user)
@@ -198,6 +201,8 @@ export const AuthProvider = ({ children }) => {
           }
           setUserProfile(userProfile)
           setCurrentUser(result.user)
+          // 로컬 스토리지에 이메일 저장 (랭킹용)
+          localStorage.setItem('currentUserEmail', email)
           toast.success('会員登録が完了しました！')
           return result
           
@@ -240,6 +245,8 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth)
       setUserProfile(null)
       setCurrentUser(null)
+      // 로컬 스토리지에서 이메일 제거
+      localStorage.removeItem('currentUserEmail')
       toast.success('ログアウトしました')
     } catch (error) {
       console.error('로그아웃 오류:', error)
@@ -276,20 +283,30 @@ export const AuthProvider = ({ children }) => {
               const userData = userDoc.data()
               const profile = {
                 nickname: userData.nickname,
+                email: userData.email,
                 uid: user.uid,
                 isAnonymous: user.isAnonymous || false,
                 createdAt: userData.createdAt
               }
               setUserProfile(profile)
+              // 로그인 시 이메일을 localStorage에 저장
+              if (userData.email && !user.isAnonymous) {
+                localStorage.setItem('currentUserEmail', userData.email)
+              }
             } else {
               // Firestore에 사용자 정보가 없으면 기본값 설정
               const profile = {
                 nickname: user.displayName || (user.isAnonymous ? 'ゲスト' : 'ユーザー'),
+                email: user.email,
                 uid: user.uid,
                 isAnonymous: user.isAnonymous || false,
                 createdAt: new Date()
               }
               setUserProfile(profile)
+              // 로그인 시 이메일을 localStorage에 저장
+              if (user.email && !user.isAnonymous) {
+                localStorage.setItem('currentUserEmail', user.email)
+              }
             }
           } catch (firestoreError) {
             console.warn('Firestore 연결 실패, 기본 프로필 사용:', firestoreError)

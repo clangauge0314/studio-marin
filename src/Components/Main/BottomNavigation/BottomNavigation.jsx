@@ -11,7 +11,7 @@ const BottomNavigation = () => {
     { id: 'home', label: 'ホーム', icon: Home, href: '/' },
     { id: 'board', label: '掲示板', icon: FileText, href: '/board' },
     { id: 'events', label: 'イベント&ゲーム', icon: Gamepad2, href: '/events' },
-    { id: 'ranking', label: 'ランキング', icon: Trophy, href: '#ranking' },
+    { id: 'ranking', label: 'ランキング', icon: Trophy, href: '/ranking' },
   ]
 
   return (
@@ -21,7 +21,8 @@ const BottomNavigation = () => {
           {navItems.map((item) => {
             const isActive = (item.href === '/' && location.pathname === '/') || 
                            (item.href === '/board' && location.pathname === '/board') ||
-                           (item.href === '/events' && location.pathname === '/events')
+                           (item.href === '/events' && location.pathname === '/events') ||
+                           (item.href === '/ranking' && location.pathname === '/ranking')
             return (
               <a
                 key={item.id}
@@ -30,8 +31,8 @@ const BottomNavigation = () => {
                   isActive
                     ? 'text-[#06b6d4]'
                     : dark 
-                      ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-900' 
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                      ? 'text-gray-300 hover:text-cyan-400 hover:bg-gray-900' 
+                      : 'text-gray-600 hover:text-cyan-600 hover:bg-gray-50'
                 }`}
               >
                 <item.icon className="w-6 h-6 mb-1" />
