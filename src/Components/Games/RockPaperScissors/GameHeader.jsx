@@ -226,7 +226,7 @@ const GameHeader = ({ winStreak, bestStreak, dark, playerNickname, selectedAI, o
                       <div className={`text-xs font-medium ${dark ? 'text-blue-300' : 'text-blue-600'} mb-2`}>
                         引き分け含む
                       </div>
-                      <div className={`text-2xl font-black ${dark ? 'text-blue-400' : 'text-blue-700'} mb-1`}>
+                      <div className={`text-lg font-black ${dark ? 'text-blue-400' : 'text-blue-700'} mb-1`}>
                         {probabilities.case1}%
                       </div>
                       <div className={`text-xs ${dark ? 'text-blue-200' : 'text-blue-500'}`}>
@@ -245,7 +245,7 @@ const GameHeader = ({ winStreak, bestStreak, dark, playerNickname, selectedAI, o
                       <div className={`text-xs font-medium ${dark ? 'text-purple-300' : 'text-purple-600'} mb-2`}>
                         引き分け無視
                       </div>
-                      <div className={`text-2xl font-black ${dark ? 'text-purple-400' : 'text-purple-700'} mb-1`}>
+                      <div className={`text-lg font-black ${dark ? 'text-purple-400' : 'text-purple-700'} mb-1`}>
                         {probabilities.case2}%
                       </div>
                       <div className={`text-xs ${dark ? 'text-purple-200' : 'text-purple-500'}`}>

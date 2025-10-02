@@ -61,7 +61,10 @@ const RockPaperScissors = () => {
       }
     } catch (error) {
       console.error('최고 연승기록 로드 실패:', error)
-      toast.error('최고 연승기록을 불러오는데 실패했습니다')
+      // 게스트 유저가 아닐 때만 에러 메시지 표시
+      if (currentUser && !currentUser.isAnonymous) {
+        toast.error('最高連勝記録の読み込みに失敗しました')
+      }
     } finally {
       setIsLoadingStreak(false)
     }
@@ -96,7 +99,10 @@ const RockPaperScissors = () => {
       toast.success(`新しい最高記録: ${newBestStreak}連勝！`)
     } catch (error) {
       console.error('최고 연승기록 저장 실패:', error)
-      toast.error('최고 연승기록 저장에 실패했습니다')
+      // 게스트 유저가 아닐 때만 에러 메시지 표시
+      if (currentUser && !currentUser.isAnonymous) {
+        toast.error('最高連勝記録の保存に失敗しました')
+      }
     }
   }
 

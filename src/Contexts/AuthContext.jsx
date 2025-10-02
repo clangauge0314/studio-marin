@@ -13,47 +13,6 @@ import { toast } from 'sonner'
 
 const AuthContext = createContext()
 
-// 간단한 해시 함수 (실제 프로덕션에서는 더 강력한 해시 사용)
-const simpleHash = (password) => {
-  let hash = 0
-  for (let i = 0; i < password.length; i++) {
-    const char = password.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash // 32bit 정수로 변환
-  }
-  return hash.toString()
-}
-
-// 닉네임 중복 검사
-const checkNicknameExists = async (nickname) => {
-  try {
-    const q = query(collection(db, 'users'), where('nickname', '==', nickname))
-    const querySnapshot = await getDocs(q)
-    return !querySnapshot.empty
-  } catch (error) {
-    console.error('닉네임 중복 검사 오류:', error)
-    return false
-  }
-}
-
-// 닉네임으로 사용자 찾기
-const findUserByNickname = async (nickname) => {
-  try {
-    const q = query(collection(db, 'users'), where('nickname', '==', nickname))
-    const querySnapshot = await getDocs(q)
-    
-    if (!querySnapshot.empty) {
-      const userDoc = querySnapshot.docs[0]
-      return { id: userDoc.id, ...userDoc.data() }
-    }
-    return null
-  } catch (error) {
-    console.error('사용자 찾기 오류:', error)
-    return null
-  }
-}
-
-
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
@@ -114,21 +73,21 @@ export const AuthProvider = ({ children }) => {
       setUserProfile(userProfile)
       setLoading(false)
       
-      toast.success('회원가입이 완료되었습니다!')
+      toast.success('会員登録が完了しました！')
       return result
       
     } catch (error) {
-      console.error('회원가입 오류:', error)
+      console.error('会員登録エラー:', error)
       setLoading(false)
       
-      // Firebase 오류 메시지 한국어 변환
-      let errorMessage = '회원가입 중 오류가 발생했습니다'
+      // Firebase 오류 메시지 일본어 변환
+      let errorMessage = '会員登録中にエラーが発生しました'
       if (error.code === 'auth/email-already-in-use') {
-        errorMessage = '이미 사용 중인 이메일입니다'
+        errorMessage = 'このメールアドレスは既に使用されています'
       } else if (error.code === 'auth/weak-password') {
-        errorMessage = '비밀번호가 너무 약합니다'
+        errorMessage = 'パスワードが弱すぎます'
       } else if (error.code === 'auth/invalid-email') {
-        errorMessage = '유효하지 않은 이메일입니다'
+        errorMessage = '無効なメールアドレスです'
       }
       
       toast.error(errorMessage)
@@ -213,7 +172,7 @@ export const AuthProvider = ({ children }) => {
       }
       
     } catch (error) {
-      console.error('인증 오류:', error)
+      console.error('認証エラー:', error)
       if (error.code === 'auth/wrong-password') {
         toast.error('パスワードが正しくありません')
       } else if (error.code === 'auth/invalid-email') {
@@ -249,7 +208,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('currentUserEmail')
       toast.success('ログアウトしました')
     } catch (error) {
-      console.error('로그아웃 오류:', error)
+      console.error('ログアウトエラー:', error)
       toast.error('ログアウト中にエラーが発生しました')
       throw error
     }
@@ -264,7 +223,7 @@ export const AuthProvider = ({ children }) => {
       }
       return null
     } catch (error) {
-      console.error('프로필 가져오기 오류:', error)
+      console.error('プロフィール取得エラー:', error)
       return null
     }
   }
@@ -309,7 +268,7 @@ export const AuthProvider = ({ children }) => {
               }
             }
           } catch (firestoreError) {
-            console.warn('Firestore 연결 실패, 기본 프로필 사용:', firestoreError)
+            console.warn('Firestore接続失敗、デフォルトプロフィール使用:', firestoreError)
             // Firestore 연결 실패해도 기본 프로필로 계속 진행
             const profile = {
               nickname: user.displayName || (user.isAnonymous ? 'ゲスト' : 'ユーザー'),
@@ -324,7 +283,7 @@ export const AuthProvider = ({ children }) => {
           setUserProfile(null)
         }
       } catch (error) {
-        console.error('인증 상태 변경 오류:', error)
+        console.error('認証状態変更エラー:', error)
       } finally {
         setLoading(false)
       }

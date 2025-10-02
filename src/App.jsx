@@ -7,6 +7,7 @@ import MainPage from './Pages/Main/MainPage'
 import BoardPage from './Pages/Board/BoardPage'
 import EventsPage from './Pages/Events/EventsPage'
 import RankingPage from './Pages/Ranking/RankingPage'
+import ProfilePage from './Pages/Profile/ProfilePage'
 import LoginPage from './Pages/Auth/LoginPage'
 import SignupPage from './Pages/Auth/SignupPage'
 import LoadingPage from './Components/Common/LoadingPage/LoadingPage'
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "ranking",
         element: <RankingPage />
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />
       },
       {
         path: "login",

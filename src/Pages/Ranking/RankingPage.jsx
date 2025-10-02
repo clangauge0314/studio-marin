@@ -10,14 +10,6 @@ const RankingPage = () => {
   const { dark } = useDarkModeStore()
   const { currentUser, userProfile } = useAuth()
 
-  // 디버깅용
-  useEffect(() => {
-    console.log('🔍 RankingPage Debug:')
-    console.log('currentUser:', currentUser)
-    console.log('userProfile:', userProfile)
-    console.log('currentUserRank:', currentUserRank)
-    console.log('localStorage email:', localStorage.getItem('currentUserEmail'))
-  }, [currentUser, userProfile, currentUserRank])
 
   // 순위별 아이콘과 색상
   const getRankIcon = (rank) => {
@@ -106,25 +98,50 @@ const RankingPage = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-4xl mx-auto relative">
-        {/* 헤더 */}
         <motion.div 
-          className="text-center mb-8"
+          className="text-center mb-12"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center justify-center mb-4">
-            <Trophy className={`w-8 h-8 ${dark ? 'text-yellow-400' : 'text-yellow-600'} mr-3`} />
-            <h1 className={`text-3xl sm:text-4xl font-black ${dark ? 'text-white' : 'text-gray-900'}`}>
-              연승 랭킹
-            </h1>
-          </div>
-          <p className={`text-sm sm:text-base ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-            최고 연승 기록을 자랑하는 플레이어들
-          </p>
+          <motion.div 
+            className="relative inline-block mb-6"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="flex items-center justify-center space-x-4">
+              <motion.div
+                className={`p-3 rounded-2xl ${dark ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20' : 'bg-gradient-to-br from-yellow-100 to-amber-100'} border ${dark ? 'border-yellow-500/30' : 'border-yellow-200'}`}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Trophy className={`w-10 h-10 ${dark ? 'text-yellow-400' : 'text-yellow-600'}`} />
+              </motion.div>
+              
+              <div className="text-left">
+                <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-r ${dark ? 'from-yellow-400 via-amber-400 to-yellow-500' : 'from-yellow-600 via-amber-600 to-yellow-700'} bg-clip-text text-transparent leading-tight`}>
+                  RANKING
+                </h1>
+                <div className={`text-sm sm:text-base font-medium ${dark ? 'text-gray-400' : 'text-gray-600'} tracking-wider`}>
+                  連勝記録
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className={`inline-block px-6 py-3 rounded-full ${dark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white/80 border border-gray-200'} backdrop-blur-sm`}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <p className={`text-sm font-medium ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
+              🏆 最高連勝記録を誇るプレイヤーたち 🏆
+            </p>
+          </motion.div>
         </motion.div>
 
-        {/* 랭킹 리스트 */}
         <motion.div 
           className="space-y-3 sm:space-y-4"
           initial={{ y: 20, opacity: 0 }}
@@ -143,9 +160,7 @@ const RankingPage = () => {
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {/* 모던한 가로 레이아웃 */}
                 <div className="flex items-center justify-between">
-                  {/* 왼쪽: 순위 + 아이콘 */}
                   <div className="flex items-center space-x-3">
                     {getRankIcon(rank)}
                     <span className={`text-2xl sm:text-3xl font-black ${dark ? 'text-white' : 'text-gray-900'}`}>
@@ -153,7 +168,6 @@ const RankingPage = () => {
                     </span>
                   </div>
 
-                  {/* 중앙: 사용자 정보 */}
                   <div className="flex-1 mx-4 sm:mx-6 min-w-0">
                     <p className={`text-lg sm:text-xl font-bold ${dark ? 'text-white' : 'text-gray-900'} truncate`}>
                       {user.nickname}
@@ -163,7 +177,6 @@ const RankingPage = () => {
                     </p>
                   </div>
 
-                  {/* 오른쪽: 연승 기록 */}
                   <div className="flex items-center space-x-2">
                     <div className={`px-4 py-2 rounded-full ${dark ? 'bg-cyan-900/30' : 'bg-cyan-100'} border ${dark ? 'border-cyan-700' : 'border-cyan-200'}`}>
                       <div className="flex items-center space-x-2">
@@ -184,7 +197,6 @@ const RankingPage = () => {
         </motion.div>
 
 
-        {/* 빈 상태 */}
         {rankings.length === 0 && (
           <motion.div 
             className="text-center py-12"
@@ -203,7 +215,6 @@ const RankingPage = () => {
         )}
       </div>
 
-      {/* 하단 고정: 내 랭킹 */}
       {!loading && (
         <motion.div
           className={`fixed bottom-16 lg:bottom-0 left-0 right-0 z-40 ${dark ? 'bg-gray-900/95 border-t border-gray-700' : 'bg-white/95 border-t border-gray-200'} backdrop-blur-lg shadow-2xl`}

@@ -106,20 +106,6 @@ const NavbarUser = () => {
                     whileHover={{ x: 4 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Link
-                      to="/settings"
-                      className={`block px-4 py-2 text-sm transition-colors duration-200 ${
-                        dark ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                      }`}
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      設定
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2 }}
-                  >
                     <button
                       onClick={handleLogout}
                       className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-200 ${
