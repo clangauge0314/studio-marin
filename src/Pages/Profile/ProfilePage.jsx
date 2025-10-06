@@ -36,7 +36,6 @@ const ProfilePage = () => {
     try {
       await logout()
     } catch (error) {
-      console.error('로그아웃 오류:', error)
     }
   }
 
@@ -60,7 +59,6 @@ const ProfilePage = () => {
       try {
         await deleteDoc(userStreaksDocRef)
       } catch (error) {
-        console.warn('userStreaks 문서 삭제 실패 (존재하지 않을 수 있음):', error)
       }
       
       // 4. Firebase Auth에서 계정 삭제
@@ -72,7 +70,6 @@ const ProfilePage = () => {
       toast.success('アカウントが正常に削除されました')
       
     } catch (error) {
-      console.error('회원탈퇴 오류:', error)
       if (error.code === 'auth/wrong-password') {
         toast.error('パスワードが正しくありません')
       } else if (error.code === 'auth/too-many-requests') {
@@ -117,19 +114,37 @@ const ProfilePage = () => {
         {/* 헤더 */}
         <motion.div 
           className="text-center mb-8"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <div className="flex items-center justify-center mb-4">
-            <User className={`w-8 h-8 ${dark ? 'text-cyan-400' : 'text-cyan-600'} mr-3`} />
-            <h1 className={`text-3xl sm:text-4xl font-black ${dark ? 'text-white' : 'text-gray-900'}`}>
-              プロフィール
+          <motion.div
+            className="flex items-center justify-center mb-4"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mr-4 ${
+              dark ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30' : 'bg-gradient-to-br from-cyan-100 to-blue-100 border border-cyan-200'
+            }`}>
+              <User className="w-8 h-8 text-cyan-500" />
+            </div>
+            <h1 className={`text-5xl font-black bg-gradient-to-r ${
+              dark ? 'from-cyan-400 via-blue-400 to-cyan-500' : 'from-cyan-600 via-blue-600 to-cyan-700'
+            } bg-clip-text text-transparent`}>
+              PROFILE
             </h1>
-          </div>
-          <p className={`text-sm sm:text-base ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
+          </motion.div>
+          <motion.p
+            className={`text-lg font-medium ${
+              dark ? 'text-gray-400' : 'text-gray-600'
+            }`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             あなたのアカウント情報
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* 프로필 카드 */}
@@ -392,11 +407,7 @@ const ProfilePage = () => {
                   setShowPasswordInput(false)
                   setPassword('')
                 }}
-                className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  dark 
-                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 bg-red-500 text-white hover:bg-red-600`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -477,11 +488,7 @@ const ProfilePage = () => {
             <div className="flex gap-3">
               <motion.button
                 onClick={() => setShowDeleteConfirm(false)}
-                className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  dark 
-                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 bg-red-500 text-white hover:bg-red-600`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >

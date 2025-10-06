@@ -27,7 +27,6 @@ export const useUserData = (uid) => {
         setUserData(null)
       }
     } catch (err) {
-      console.error('사용자 데이터 가져오기 오류:', err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -63,7 +62,6 @@ export const useUserData = (uid) => {
       setUserData(prev => ({ ...prev, ...data }))
       
     } catch (err) {
-      console.error('사용자 데이터 업데이트 오류:', err)
       setError(err.message)
       throw err
     }

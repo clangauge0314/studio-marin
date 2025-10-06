@@ -5,6 +5,7 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../../firebase/config'
 import useDarkModeStore from '../../../Store/useDarkModeStore'
 import { useAuth } from '../../../Contexts/AuthContext'
+import { AI_CHARACTERS } from './AICharacters'
 
 // 컴포넌트 imports
 import GameHeader from './GameHeader'
@@ -28,10 +29,61 @@ const RockPaperScissors = () => {
     result: null,
     winStreak: 0,
     bestStreak: 0,
+    totalPoints: 0,
     isGameOver: false,
     isPlaying: false,
     isCooldown: false
   })
+
+  // AI 선택 로직 (난이도별 패턴 + 연승에 따른 역동적 어려움)
+  const getAIChoice = (playerChoice, aiCharacter, winStreak = 0) => {
+    const choices = ['rock', 'paper', 'scissors']
+    const choiceIndex = choices.indexOf(playerChoice)
+    
+    if (!aiCharacter) {
+      return choices[Math.floor(Math.random() * choices.length)]
+    }
+
+    // 연승에 따른 AI 강화 (연승이 길어질수록 더 공격적)
+    const streakBonus = Math.min(winStreak * 0.1, 0.3) // 최대 30%까지 보너스
+
+    switch (aiCharacter.aiPattern) {
+      case 'random':
+        // ゆう: 연승이 길어져도 완전 랜덤 (하지만 약간의 카운터 보너스)
+        const randomCounterBonus = Math.random() < streakBonus ? 1 : 0
+        if (randomCounterBonus && Math.random() < 0.3) {
+          const counterMap = { 'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock' }
+          return counterMap[playerChoice]
+        }
+        return choices[Math.floor(Math.random() * choices.length)]
+      
+      case 'balanced':
+        // かりん: 연승이 길어질수록 더 카운터 지향적
+        const balancedCounterRate = Math.min(0.6 + streakBonus, 0.9)
+        const balancedRandom = Math.random()
+        if (balancedRandom < balancedCounterRate) {
+          const counterMap = { 'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock' }
+          return counterMap[playerChoice]
+        } else {
+          return choices[Math.floor(Math.random() * choices.length)]
+        }
+      
+      case 'counter':
+        // ここあ: 연승이 길어질수록 더 정확한 카운터
+        const counterRate = Math.min(0.7 + streakBonus, 0.95)
+        const counterMap = { 'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock' }
+        return Math.random() < counterRate ? counterMap[playerChoice] : choices[Math.floor(Math.random() * choices.length)]
+      
+      case 'advanced':
+        // ちふゆ: 연승이 길어질수록 거의 완벽한 카운터
+        const advancedCounterRate = Math.min(0.85 + streakBonus, 0.98)
+        const advancedCounterMap = { 'rock': 'paper', 'paper': 'scissors', 'scissors': 'rock' }
+        return Math.random() < advancedCounterRate ? advancedCounterMap[playerChoice] : choices[Math.floor(Math.random() * choices.length)]
+      
+      default:
+        return choices[Math.floor(Math.random() * choices.length)]
+    }
+  }
 
   // 사용자의 최고 연승기록을 Firestore에서 가져오기
   const loadUserBestStreak = async () => {
@@ -60,7 +112,6 @@ const RockPaperScissors = () => {
         }))
       }
     } catch (error) {
-      console.error('최고 연승기록 로드 실패:', error)
       // 게스트 유저가 아닐 때만 에러 메시지 표시
       if (currentUser && !currentUser.isAnonymous) {
         toast.error('最高連勝記録の読み込みに失敗しました')
@@ -70,8 +121,8 @@ const RockPaperScissors = () => {
     }
   }
 
-  // 최고 연승기록을 Firestore에 저장/업데이트
-  const updateUserBestStreak = async (newBestStreak) => {
+  // 최고 연승기록과 포인트를 Firestore에 저장/업데이트
+  const updateUserBestStreak = async (newBestStreak, newTotalPoints) => {
     if (!currentUser) return
 
     try {
@@ -82,12 +133,14 @@ const RockPaperScissors = () => {
         // 기존 문서 업데이트
         await updateDoc(userDocRef, {
           bestStreak: newBestStreak,
+          totalPoints: newTotalPoints,
           updatedAt: new Date()
         })
       } else {
         // 새 문서 생성
         await setDoc(userDocRef, {
           bestStreak: newBestStreak,
+          totalPoints: newTotalPoints,
           email: currentUser.email,
           nickname: userProfile?.nickname || 'ユーザー',
           createdAt: new Date(),
@@ -98,11 +151,40 @@ const RockPaperScissors = () => {
       setUserBestStreak(newBestStreak)
       toast.success(`新しい最高記録: ${newBestStreak}連勝！`)
     } catch (error) {
-      console.error('최고 연승기록 저장 실패:', error)
       // 게스트 유저가 아닐 때만 에러 메시지 표시
       if (currentUser && !currentUser.isAnonymous) {
         toast.error('最高連勝記録の保存に失敗しました')
       }
+    }
+  }
+
+  // 포인트만 업데이트 (최고 기록 갱신이 아닌 경우)
+  const updateUserPoints = async (newTotalPoints) => {
+    if (!currentUser) return
+
+    try {
+      const userDocRef = doc(db, 'userStreaks', currentUser.email)
+      const userDoc = await getDoc(userDocRef)
+      
+      if (userDoc.exists()) {
+        // 기존 문서 업데이트
+        await updateDoc(userDocRef, {
+          totalPoints: newTotalPoints,
+          updatedAt: new Date()
+        })
+      } else {
+        // 새 문서 생성
+        await setDoc(userDocRef, {
+          bestStreak: 0,
+          totalPoints: newTotalPoints,
+          email: currentUser.email,
+          nickname: userProfile?.nickname || 'ユーザー',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+      }
+    } catch (error) {
+      // 에러는 조용히 처리 (사용자 경험 방해 안함)
     }
   }
 
@@ -115,22 +197,35 @@ const RockPaperScissors = () => {
       isPlaying: true
     }))
 
-    // AI 선택 (랜덤)
+    // AI 선택 (난이도별 패턴)
     setTimeout(() => {
-      const choices = ['rock', 'paper', 'scissors']
-      const aiChoice = choices[Math.floor(Math.random() * choices.length)]
+      const aiChoice = getAIChoice(choice, selectedAI, gameState.winStreak)
       
       setGameState(prev => {
         const result = determineWinner(choice, aiChoice)
         let newWinStreak = prev.winStreak
         let newBestStreak = prev.bestStreak
+        let newTotalPoints = prev.totalPoints
         let isGameOver = false
         
         if (result === 'player') {
-          // 승리 시 연승 증가
+          // 승리 시 연승 증가 및 포인트 획득
           newWinStreak++
           if (newWinStreak > newBestStreak) {
             newBestStreak = newWinStreak
+          }
+          
+          // 기본 포인트 + 연승 보너스 포인트 계산
+          const basePoints = selectedAI?.points || 1
+          const streakBonus = Math.floor(newWinStreak / 3) // 3연승마다 보너스
+          const totalPoints = basePoints + streakBonus
+          newTotalPoints += totalPoints
+          
+          // 포인트 획득 메시지 (보너스가 있으면 표시)
+          if (streakBonus > 0) {
+            toast.success(`+${basePoints}ポイント + ${streakBonus}ボーナス = +${totalPoints}ポイント獲得！`)
+          } else {
+            toast.success(`+${totalPoints}ポイント獲得！`)
           }
         } else if (result === 'ai') {
           // 패배 시 게임 종료
@@ -143,7 +238,10 @@ const RockPaperScissors = () => {
         
         // 로그인된 사용자이고 새로운 최고 기록을 달성한 경우 DB 업데이트
         if (currentUser && newBestStreak > userBestStreak) {
-          updateUserBestStreak(newBestStreak)
+          updateUserBestStreak(newBestStreak, newTotalPoints)
+        } else if (currentUser && result === 'player') {
+          // 최고 기록은 아니지만 포인트를 얻은 경우에도 업데이트
+          updateUserPoints(newTotalPoints)
         }
         
         return {
@@ -152,6 +250,7 @@ const RockPaperScissors = () => {
           result,
           winStreak: isGameOver ? prev.winStreak : newWinStreak,
           bestStreak: newBestStreak,
+          totalPoints: newTotalPoints,
           isGameOver,
           isPlaying: false
         }
@@ -178,6 +277,7 @@ const RockPaperScissors = () => {
       result: null,
       winStreak: 0,
       bestStreak: userBestStreak, // 최고 기록은 유지
+      totalPoints: 0, // 포인트 리셋
       isGameOver: false,
       isPlaying: false,
       isCooldown: false
@@ -202,6 +302,7 @@ const RockPaperScissors = () => {
       result: null,
       winStreak: 0,
       bestStreak: userBestStreak,
+      totalPoints: 0,
       isGameOver: false,
       isPlaying: false,
       isCooldown: false
@@ -336,6 +437,7 @@ const RockPaperScissors = () => {
             <GameHeader 
               winStreak={gameState.winStreak}
               bestStreak={gameState.bestStreak}
+              totalPoints={gameState.totalPoints}
               dark={dark}
               playerNickname={userProfile?.nickname}
               selectedAI={selectedAI}

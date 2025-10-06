@@ -56,9 +56,9 @@ const GameArea = ({ playerChoice, aiChoice, isPlaying, dark, playerNickname, sel
           className="relative mb-3 xs:mb-4 sm:mb-6"
           whileHover={{ scale: 1.05 }}
         >
-          <div className={`relative ${dark ? 'bg-red-600' : 'bg-red-500'} rounded-lg xs:rounded-xl sm:rounded-2xl px-2 xs:px-3 sm:px-4 sm:py-2.5 md:px-6 md:py-3 py-1.5 xs:py-2 shadow-xl`}>
+          <div className={`relative ${selectedAI ? selectedAI.color : (dark ? 'bg-red-600' : 'bg-red-500')} rounded-lg xs:rounded-xl sm:rounded-2xl px-2 xs:px-3 sm:px-4 sm:py-2.5 md:px-6 md:py-3 py-1.5 xs:py-2 shadow-xl`}>
             <motion.div 
-              className={`absolute inset-0 ${dark ? 'bg-red-600' : 'bg-red-500'} rounded-xl sm:rounded-2xl opacity-20 blur-lg`}
+              className={`absolute inset-0 ${selectedAI ? selectedAI.color : (dark ? 'bg-red-600' : 'bg-red-500')} rounded-xl sm:rounded-2xl opacity-20 blur-lg`}
               animate={{ 
                 scale: [1, 1.1, 1],
                 opacity: [0.2, 0.4, 0.2]

@@ -5,6 +5,7 @@ import { AuthProvider } from './Contexts/AuthContext'
 import Layout from './Components/Layout/Layout'
 import MainPage from './Pages/Main/MainPage'
 import BoardPage from './Pages/Board/BoardPage'
+import PostDetailPage from './Pages/Board/PostDetailPage'
 import EventsPage from './Pages/Events/EventsPage'
 import RankingPage from './Pages/Ranking/RankingPage'
 import ProfilePage from './Pages/Profile/ProfilePage'
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "board",
         element: <BoardPage />
+      },
+      {
+        path: "board/:postId",
+        element: <PostDetailPage />
       },
       {
         path: "events",

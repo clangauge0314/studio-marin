@@ -16,7 +16,6 @@ const NavbarUser = () => {
       setIsDropdownOpen(false)
       navigate('/')
     } catch (error) {
-      console.error('로그아웃 오류:', error)
     }
   }
 

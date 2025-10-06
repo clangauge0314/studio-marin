@@ -94,11 +94,20 @@ const SignupPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <h2 className={`mt-6 text-center text-3xl font-extrabold ${
-            dark ? 'text-white' : 'text-gray-900'
-          }`}>
-            会員登録
-          </h2>
+          <div className="flex items-center justify-center mb-4">
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mr-4 ${
+              dark ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30' : 'bg-gradient-to-br from-cyan-100 to-blue-100 border border-cyan-200'
+            }`}>
+              <svg className="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+            </div>
+            <h2 className={`text-5xl font-black bg-gradient-to-r ${
+              dark ? 'from-cyan-400 via-blue-400 to-cyan-500' : 'from-cyan-600 via-blue-600 to-cyan-700'
+            } bg-clip-text text-transparent`}>
+              SIGNUP
+            </h2>
+          </div>
           <motion.p 
             className={`mt-2 text-center text-sm ${
               dark ? 'text-gray-400' : 'text-gray-600'

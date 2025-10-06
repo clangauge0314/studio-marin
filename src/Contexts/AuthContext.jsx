@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }) => {
       toast.success('ゲストとしてログインしました')
       return result
     } catch (error) {
-      console.error('익명 로그인 오류:', error)
       toast.error('ゲストログイン中にエラーが発生しました')
       throw error
     }
@@ -77,7 +76,6 @@ export const AuthProvider = ({ children }) => {
       return result
       
     } catch (error) {
-      console.error('会員登録エラー:', error)
       setLoading(false)
       
       // Firebase 오류 메시지 일본어 변환
@@ -172,7 +170,6 @@ export const AuthProvider = ({ children }) => {
       }
       
     } catch (error) {
-      console.error('認証エラー:', error)
       if (error.code === 'auth/wrong-password') {
         toast.error('パスワードが正しくありません')
       } else if (error.code === 'auth/invalid-email') {
@@ -208,7 +205,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('currentUserEmail')
       toast.success('ログアウトしました')
     } catch (error) {
-      console.error('ログアウトエラー:', error)
       toast.error('ログアウト中にエラーが発生しました')
       throw error
     }
@@ -223,7 +219,6 @@ export const AuthProvider = ({ children }) => {
       }
       return null
     } catch (error) {
-      console.error('プロフィール取得エラー:', error)
       return null
     }
   }
@@ -268,7 +263,6 @@ export const AuthProvider = ({ children }) => {
               }
             }
           } catch (firestoreError) {
-            console.warn('Firestore接続失敗、デフォルトプロフィール使用:', firestoreError)
             // Firestore 연결 실패해도 기본 프로필로 계속 진행
             const profile = {
               nickname: user.displayName || (user.isAnonymous ? 'ゲスト' : 'ユーザー'),
@@ -283,7 +277,6 @@ export const AuthProvider = ({ children }) => {
           setUserProfile(null)
         }
       } catch (error) {
-        console.error('認証状態変更エラー:', error)
       } finally {
         setLoading(false)
       }

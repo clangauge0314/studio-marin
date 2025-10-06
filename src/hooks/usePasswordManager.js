@@ -35,7 +35,6 @@ export const usePasswordManager = () => {
       })
 
     } catch (err) {
-      console.error('비밀번호 저장 오류:', err)
       setError(err.message)
       throw err
     } finally {
@@ -64,7 +63,6 @@ export const usePasswordManager = () => {
       return hashedPassword === inputHashedPassword
 
     } catch (err) {
-      console.error('비밀번호 검증 오류:', err)
       setError(err.message)
       return false
     } finally {
@@ -89,7 +87,6 @@ export const usePasswordManager = () => {
       }, { merge: true })
 
     } catch (err) {
-      console.error('비밀번호 업데이트 오류:', err)
       setError(err.message)
       throw err
     } finally {
@@ -112,7 +109,6 @@ export const usePasswordManager = () => {
       }, { merge: true })
 
     } catch (err) {
-      console.error('비밀번호 삭제 오류:', err)
       setError(err.message)
       throw err
     } finally {

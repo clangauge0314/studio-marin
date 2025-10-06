@@ -33,9 +33,9 @@ const GameResult = ({ result, playerChoice, aiChoice, dark, isGameOver, winStrea
         return { 
           text: `${selectedAI?.name || 'AI'}の勝利！`, 
           subtitle: '連勝終了',
-          color: dark ? 'bg-red-600' : 'bg-red-500',
+          color: selectedAI ? selectedAI.color : (dark ? 'bg-red-600' : 'bg-red-500'),
           icon: Flame,
-          bgColor: dark ? 'bg-red-600' : 'bg-red-500'
+          bgColor: selectedAI ? selectedAI.color : (dark ? 'bg-red-600' : 'bg-red-500')
         }
       case 'tie':
         return { 

@@ -22,8 +22,8 @@ export const useRanking = () => {
         const currentUserEmail = currentUser?.email || userProfile?.email || null
 
 
-        // 1. 상위 10명의 사용자 데이터 가져오기 (최적화: 필요한 데이터만)
-        const topQuery = query(usersRef, orderBy('bestStreak', 'desc'), limit(10))
+        // 1. 상위 10명의 사용자 데이터 가져오기 (포인트 기준)
+        const topQuery = query(usersRef, orderBy('totalPoints', 'desc'), limit(10))
         const topSnapshot = await getDocs(topQuery)
 
         const rankingsData = []
@@ -33,6 +33,7 @@ export const useRanking = () => {
             id: doc.id,
             email: data.email,
             nickname: data.nickname || 'Unknown',
+            totalPoints: data.totalPoints || 0,
             bestStreak: data.bestStreak || 0,
             totalGames: data.totalGames || 0,
             winRate: data.winRate || 0
@@ -63,13 +64,13 @@ export const useRanking = () => {
             
             if (!userSnapshot.empty) {
               const userData = userSnapshot.docs[0].data()
-              const currentUserStreak = userData.bestStreak || 0
+              const currentUserPoints = userData.totalPoints || 0
               
               
-              // 현재 사용자보다 높은 점수를 가진 사용자 수를 카운트 (최적화)
+              // 현재 사용자보다 높은 포인트를 가진 사용자 수를 카운트 (최적화)
               const higherScoreQuery = query(
                 usersRef, 
-                where('bestStreak', '>', currentUserStreak)
+                where('totalPoints', '>', currentUserPoints)
               )
               const higherScoreCount = await getCountFromServer(higherScoreQuery)
               const rank = higherScoreCount.data().count + 1
@@ -78,7 +79,8 @@ export const useRanking = () => {
                 id: userSnapshot.docs[0].id,
                 email: userData.email,
                 nickname: userData.nickname || 'Unknown',
-                bestStreak: currentUserStreak,
+                totalPoints: currentUserPoints,
+                bestStreak: userData.bestStreak || 0,
                 totalGames: userData.totalGames || 0,
                 winRate: userData.winRate || 0,
                 rank: rank
@@ -96,7 +98,6 @@ export const useRanking = () => {
         setTotalUsers(totalCountSnapshot.data().count)
 
       } catch (err) {
-        console.error('랭킹 데이터 가져오기 실패:', err)
         setError('랭킹 데이터를 불러올 수 없습니다.')
       } finally {
         setLoading(false)

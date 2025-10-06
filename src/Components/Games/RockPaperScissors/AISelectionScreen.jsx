@@ -74,7 +74,7 @@ const AISelectionScreen = ({ onSelectAI, dark }) => {
               whileTap={{ scale: 0.95 }}
               onClick={() => onSelectAI(ai)}
             >
-              <div className={`relative ${ai.color} rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 px-12 sm:px-8 md:px-10 shadow-2xl overflow-hidden`}>
+              <div className={`relative ${ai.color} rounded-2xl sm:rounded-3xl p-6 sm:p-7 md:p-8 px-8 sm:px-6 md:px-8 shadow-2xl overflow-hidden`}>
                 {/* 글로우 효과 */}
                 <motion.div
                   className={`absolute inset-0 ${ai.color} rounded-2xl sm:rounded-3xl opacity-20 blur-xl`}
@@ -88,27 +88,47 @@ const AISelectionScreen = ({ onSelectAI, dark }) => {
                 <div className="relative z-10 text-center">
                   {/* 아바타 */}
                   <motion.div 
-                    className="relative mb-3 sm:mb-4"
+                    className="relative mb-4 sm:mb-6"
                     animate={{ 
-                      rotate: [0, 2, -2, 0],
-                      scale: [1, 1.05, 1]
+                      rotate: [0, 3, -3, 0],
+                      scale: [1, 1.08, 1],
+                      y: [0, -5, 0]
                     }}
-                    transition={{ duration: 3, repeat: Infinity, delay: index * 0.3 }}
+                    transition={{ duration: 4, repeat: Infinity, delay: index * 0.3 }}
                   >
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto">
-                      <img 
-                        src={ai.avatar} 
-                        alt={ai.name}
-                        className="w-full h-full rounded-full object-cover border-4 border-white/30 shadow-2xl"
-                      />
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto">
+                      {/* 외부 글로우 효과 */}
                       <motion.div
-                        className="absolute inset-0 rounded-full border-2 border-white/50"
+                        className={`absolute inset-0 ${ai.color} rounded-full opacity-30 blur-lg`}
                         animate={{ 
-                          scale: [1, 1.1, 1],
-                          opacity: [0.5, 0.8, 0.5]
+                          scale: [1, 1.2, 1],
+                          opacity: [0.3, 0.6, 0.3]
                         }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        transition={{ duration: 3, repeat: Infinity, delay: index * 0.2 }}
                       />
+                      
+                      {/* 메인 이미지 컨테이너 */}
+                      <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/40 shadow-2xl">
+                        <img 
+                          src={ai.avatar} 
+                          alt={ai.name}
+                          className="w-full h-full object-cover object-center"
+                        />
+                        
+                        {/* 내부 글로우 효과 */}
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-white/60"
+                          animate={{ 
+                            scale: [1, 1.05, 1],
+                            opacity: [0.6, 0.9, 0.6]
+                          }}
+                          transition={{ duration: 2.5, repeat: Infinity }}
+                        />
+                        
+                        {/* 상단 하이라이트 */}
+                        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent rounded-t-full" />
+                      </div>
+                      
                     </div>
                   </motion.div>
                   

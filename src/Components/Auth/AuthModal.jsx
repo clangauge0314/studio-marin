@@ -128,7 +128,7 @@ const AuthModal = ({ isOpen, onClose, isFullScreen = false }) => {
             className={`w-full py-2 px-4 rounded-md font-medium transition-all duration-300 ${
               loading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 hover:scale-105'
+                : 'bg-cyan-500 hover:bg-cyan-600 hover:scale-105'
             } text-white`}
           >
             {loading ? '処理中...' : 'ログイン / 会員登録'}

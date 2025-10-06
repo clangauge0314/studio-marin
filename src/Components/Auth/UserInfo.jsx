@@ -12,7 +12,6 @@ const UserInfo = () => {
     try {
       await logout()
     } catch (error) {
-      console.error('로그아웃 오류:', error)
     }
   }
 

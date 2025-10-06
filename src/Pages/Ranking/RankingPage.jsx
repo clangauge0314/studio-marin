@@ -100,46 +100,37 @@ const RankingPage = () => {
       <div className="max-w-4xl mx-auto relative">
         <motion.div 
           className="text-center mb-12"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <motion.div 
-            className="relative inline-block mb-6"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="flex items-center justify-center space-x-4">
-              <motion.div
-                className={`p-3 rounded-2xl ${dark ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20' : 'bg-gradient-to-br from-yellow-100 to-amber-100'} border ${dark ? 'border-yellow-500/30' : 'border-yellow-200'}`}
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Trophy className={`w-10 h-10 ${dark ? 'text-yellow-400' : 'text-yellow-600'}`} />
-              </motion.div>
-              
-              <div className="text-left">
-                <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-r ${dark ? 'from-yellow-400 via-amber-400 to-yellow-500' : 'from-yellow-600 via-amber-600 to-yellow-700'} bg-clip-text text-transparent leading-tight`}>
-                  RANKING
-                </h1>
-                <div className={`text-sm sm:text-base font-medium ${dark ? 'text-gray-400' : 'text-gray-600'} tracking-wider`}>
-                  連勝記録
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
           <motion.div
-            className={`inline-block px-6 py-3 rounded-full ${dark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white/80 border border-gray-200'} backdrop-blur-sm`}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            className="flex items-center justify-center mb-4"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mr-4 ${
+              dark ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30' : 'bg-gradient-to-br from-cyan-100 to-blue-100 border border-cyan-200'
+            }`}>
+              <Trophy className="w-8 h-8 text-cyan-500" />
+            </div>
+            <h1 className={`text-5xl font-black bg-gradient-to-r ${
+              dark ? 'from-cyan-400 via-blue-400 to-cyan-500' : 'from-cyan-600 via-blue-600 to-cyan-700'
+            } bg-clip-text text-transparent`}>
+              RANKING
+            </h1>
+          </motion.div>
+          <motion.p
+            className={`text-lg font-medium ${
+              dark ? 'text-gray-400' : 'text-gray-600'
+            }`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <p className={`text-sm font-medium ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
-              🏆 最高連勝記録を誇るプレイヤーたち 🏆
-            </p>
-          </motion.div>
+            総ポイントを競うプレイヤーたち
+          </motion.p>
         </motion.div>
 
         <motion.div 
@@ -180,12 +171,12 @@ const RankingPage = () => {
                   <div className="flex items-center space-x-2">
                     <div className={`px-4 py-2 rounded-full ${dark ? 'bg-cyan-900/30' : 'bg-cyan-100'} border ${dark ? 'border-cyan-700' : 'border-cyan-200'}`}>
                       <div className="flex items-center space-x-2">
-                        <Target className={`w-5 h-5 ${dark ? 'text-cyan-400' : 'text-cyan-600'}`} />
+                        <span className="text-lg">⭐</span>
                         <span className={`text-xl sm:text-2xl font-black ${dark ? 'text-cyan-400' : 'text-cyan-600'}`}>
-                          {user.bestStreak}
+                          {user.totalPoints || 0}
                         </span>
                         <span className={`text-sm font-semibold ${dark ? 'text-cyan-300' : 'text-cyan-700'}`}>
-                          連勝
+                          ポイント
                         </span>
                       </div>
                     </div>
@@ -265,12 +256,12 @@ const RankingPage = () => {
                   <div className="flex items-center space-x-2">
                     <div className={`px-3 py-2 sm:px-4 sm:py-2 rounded-full ${dark ? 'bg-cyan-900/50' : 'bg-cyan-100'} border ${dark ? 'border-cyan-700' : 'border-cyan-200'}`}>
                       <div className="flex items-center space-x-2">
-                        <Target className={`w-4 h-4 sm:w-5 sm:h-5 ${dark ? 'text-cyan-400' : 'text-cyan-600'}`} />
+                        <span className="text-lg">⭐</span>
                         <span className={`text-lg sm:text-2xl font-black ${dark ? 'text-cyan-400' : 'text-cyan-600'}`}>
-                          {currentUserRank.bestStreak}
+                          {currentUserRank.totalPoints || 0}
                         </span>
                         <span className={`text-xs sm:text-sm font-semibold ${dark ? 'text-cyan-300' : 'text-cyan-700'}`}>
-                          連勝
+                          ポイント
                         </span>
                       </div>
                     </div>

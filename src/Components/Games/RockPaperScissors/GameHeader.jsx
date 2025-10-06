@@ -2,33 +2,40 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Trophy, Crown, Flame } from 'lucide-react'
 
-// 연승 달성 확률 계산 함수
-const calculateStreakProbability = (winStreak) => {
+// 연승 달성 확률 계산 함수 (AI 난이도별 + 연승에 따른 역동적 변화)
+const calculateStreakProbability = (winStreak, selectedAI) => {
+  // AI별 기본 플레이어 승률 (winRate는 플레이어 승률을 의미)
+  const basePlayerWinRate = selectedAI ? parseFloat(selectedAI.winRate.replace('%', '')) / 100 : 0.5
+  const baseAiWinRate = 1 - basePlayerWinRate // 기본 AI 승률
+  
+  // 연승에 따른 역동적 승률 조정
+  // 연승이 길어질수록 AI가 더 강해져서 플레이어 승률이 감소
+  const streakPenalty = Math.min(winStreak * 0.05, 0.4) // 최대 40%까지 감소
+  const adjustedPlayerWinRate = Math.max(basePlayerWinRate - streakPenalty, 0.1) // 최소 10% 유지
+  const adjustedAiWinRate = 1 - adjustedPlayerWinRate
+  
   // 0연승일 때는 다음 1연승 달성 확률을 보여줌
   if (winStreak === 0) {
     return {
-      case1: 33.33, // 1/3 = 33.33%
-      case2: 50.00, // 1/2 = 50%
-      description: "1連勝達成確率"
+      case1: Math.round(adjustedPlayerWinRate * 100 * 100) / 100, // 조정된 플레이어 승률
+      case2: Math.round(adjustedPlayerWinRate * 100), // 무승부 무시
+      description: "1連勝達成確率",
+      aiWinRate: Math.round(adjustedAiWinRate * 100)
     }
   }
   
-  // Case 1: 무승부가 나오면 연승이 끊긴다고 가정
-  // 연승 k회 달성 확률 = (1/3)^k
-  const case1Probability = Math.pow(1/3, winStreak) * 100
-  
-  // Case 2: 무승부는 무시하고 승패가 날 때만 세는 규칙
-  // 연승 k회 달성 확률 = (1/2)^k
-  const case2Probability = Math.pow(1/2, winStreak) * 100
+  // 연승 달성 확률 계산 (조정된 승률 기반)
+  const case1Probability = Math.pow(adjustedPlayerWinRate, winStreak) * 100
   
   return {
     case1: Math.round(case1Probability * 100) / 100, // 소수점 2자리까지
-    case2: Math.round(case2Probability * 100) / 100,
-    description: winStreak === 1 ? "1連勝達成！" : `${winStreak}連勝達成！`
+    case2: Math.round(case1Probability * 100) / 100, // 동일한 계산
+    description: winStreak === 1 ? "1連勝達成！" : `${winStreak}連勝達成！`,
+    aiWinRate: Math.round(adjustedAiWinRate * 100)
   }
 }
 
-const GameHeader = ({ winStreak, bestStreak, dark, playerNickname, selectedAI, onChangeAI, currentUser, isLoadingStreak, playerChoice, aiChoice }) => {
+const GameHeader = ({ winStreak, bestStreak, totalPoints, dark, playerNickname, selectedAI, onChangeAI, currentUser, isLoadingStreak, playerChoice, aiChoice }) => {
   return (
     <motion.div 
       className="text-center mb-4 sm:mb-6"
@@ -74,9 +81,9 @@ const GameHeader = ({ winStreak, bestStreak, dark, playerNickname, selectedAI, o
         </motion.div>
       </motion.div>
       
-      {/* 연승 기록 보드 */}
+        {/* 연승 기록 보드 */}
       <motion.div 
-        className="flex justify-center items-center space-x-2 xs:space-x-3 sm:space-x-6 md:space-x-8"
+        className="flex flex-wrap justify-center items-center gap-2 xs:gap-3 sm:gap-6 md:gap-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -113,14 +120,59 @@ const GameHeader = ({ winStreak, bestStreak, dark, playerNickname, selectedAI, o
           </div>
         </motion.div>
         
+        {/* 포인트 */}
+        <motion.div 
+          className="relative"
+          whileHover={{ scale: 1.05 }}
+        >
+          <div className={`relative ${dark ? 'bg-green-600' : 'bg-green-500'} rounded-lg xs:rounded-xl sm:rounded-2xl p-2 xs:p-3 sm:p-4 md:p-6 shadow-2xl min-w-[70px] xs:min-w-[80px] sm:min-w-[110px]`}>
+            <motion.div 
+              className={`absolute inset-0 ${dark ? 'bg-green-600' : 'bg-green-500'} rounded-xl sm:rounded-2xl opacity-20 blur-xl`}
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [0.2, 0.4, 0.2]
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+            />
+            <div className="relative z-10 text-center">
+              <motion.div 
+                className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 mx-auto mb-1 xs:mb-2"
+                animate={{ 
+                  rotate: [0, 10, -10, 0],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                ⭐
+              </motion.div>
+              <motion.div 
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black text-white mb-1"
+                key={totalPoints}
+                initial={{ scale: 1.3, rotate: 5 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {totalPoints}
+              </motion.div>
+              <div className="text-xs font-bold text-green-100">
+                ポイント
+                {winStreak >= 3 && (
+                  <div className="text-xs text-yellow-300 mt-1">
+                    +{Math.floor(winStreak / 3)}ボーナス
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+        
         {/* AI 정보 */}
         <motion.div 
           className="relative"
           whileHover={{ scale: 1.05 }}
         >
-          <div className={`relative ${dark ? 'bg-purple-600' : 'bg-purple-500'} rounded-lg xs:rounded-xl sm:rounded-2xl p-2 xs:p-3 sm:p-4 md:p-6 shadow-2xl min-w-[70px] xs:min-w-[80px] sm:min-w-[110px]`}>
+          <div className={`relative ${selectedAI ? selectedAI.color : (dark ? 'bg-purple-600' : 'bg-purple-500')} rounded-lg xs:rounded-xl sm:rounded-2xl p-2 xs:p-3 sm:p-4 md:p-6 shadow-2xl min-w-[70px] xs:min-w-[80px] sm:min-w-[110px]`}>
             <motion.div 
-              className={`absolute inset-0 ${dark ? 'bg-purple-600' : 'bg-purple-500'} rounded-xl sm:rounded-2xl opacity-20 blur-xl`}
+              className={`absolute inset-0 ${selectedAI ? selectedAI.color : (dark ? 'bg-purple-600' : 'bg-purple-500')} rounded-xl sm:rounded-2xl opacity-20 blur-xl`}
               animate={{ 
                 scale: [1, 1.1, 1],
                 opacity: [0.2, 0.4, 0.2]
@@ -213,43 +265,43 @@ const GameHeader = ({ winStreak, bestStreak, dark, playerNickname, selectedAI, o
         <div className={`${dark ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-white to-gray-50'} rounded-2xl px-6 py-4 shadow-xl border ${dark ? 'border-gray-700' : 'border-gray-200'} max-w-lg`}>
           <div className="text-center">
             {(() => {
-              const probabilities = calculateStreakProbability(winStreak)
+              const probabilities = calculateStreakProbability(winStreak, selectedAI)
               return (
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Case 1: 무승부 포함 */}
+                  {/* AI 승률 */}
                   <motion.div 
-                    className={`${dark ? 'bg-blue-900/30' : 'bg-blue-50'} rounded-xl p-4 border ${dark ? 'border-blue-700' : 'border-blue-200'}`}
+                    className={`${dark ? 'bg-red-900/30' : 'bg-red-50'} rounded-xl p-4 border ${dark ? 'border-red-700' : 'border-red-200'}`}
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
                     <div className="text-center">
-                      <div className={`text-xs font-medium ${dark ? 'text-blue-300' : 'text-blue-600'} mb-2`}>
-                        引き分け含む
+                      <div className={`text-xs font-medium ${dark ? 'text-red-300' : 'text-red-600'} mb-2`}>
+                        AI勝利確率
                       </div>
-                      <div className={`text-lg font-black ${dark ? 'text-blue-400' : 'text-blue-700'} mb-1`}>
-                        {probabilities.case1}%
+                      <div className={`text-lg font-black ${dark ? 'text-red-400' : 'text-red-700'} mb-1`}>
+                        {probabilities.aiWinRate}%
                       </div>
-                      <div className={`text-xs ${dark ? 'text-blue-200' : 'text-blue-500'}`}>
-                        {probabilities.case1 < 1 ? `1/${Math.round(100/probabilities.case1)}` : ''}
+                      <div className={`text-xs ${dark ? 'text-red-200' : 'text-red-500'}`}>
+                        {selectedAI ? selectedAI.name : 'AI'}
                       </div>
                     </div>
                   </motion.div>
                   
-                  {/* Case 2: 무승부 무시 */}
+                  {/* 플레이어 승률 */}
                   <motion.div 
-                    className={`${dark ? 'bg-purple-900/30' : 'bg-purple-50'} rounded-xl p-4 border ${dark ? 'border-purple-700' : 'border-purple-200'}`}
+                    className={`${dark ? 'bg-green-900/30' : 'bg-green-50'} rounded-xl p-4 border ${dark ? 'border-green-700' : 'border-green-200'}`}
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
                     <div className="text-center">
-                      <div className={`text-xs font-medium ${dark ? 'text-purple-300' : 'text-purple-600'} mb-2`}>
-                        引き分け無視
+                      <div className={`text-xs font-medium ${dark ? 'text-green-300' : 'text-green-600'} mb-2`}>
+                        あなたの勝利確率
                       </div>
-                      <div className={`text-lg font-black ${dark ? 'text-purple-400' : 'text-purple-700'} mb-1`}>
-                        {probabilities.case2}%
+                      <div className={`text-lg font-black ${dark ? 'text-green-400' : 'text-green-700'} mb-1`}>
+                        {probabilities.case1}%
                       </div>
-                      <div className={`text-xs ${dark ? 'text-purple-200' : 'text-purple-500'}`}>
-                        {probabilities.case2 < 1 ? `1/${Math.round(100/probabilities.case2)}` : ''}
+                      <div className={`text-xs ${dark ? 'text-green-200' : 'text-green-500'}`}>
+                        {probabilities.case1 < 1 ? `1/${Math.round(100/probabilities.case1)}` : ''}
                       </div>
                     </div>
                   </motion.div>

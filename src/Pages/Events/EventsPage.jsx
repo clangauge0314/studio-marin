@@ -37,7 +37,6 @@ const EventsPage = () => {
       setIsGuestMode(true);
       setShowAuthModal(false);
     } catch (error) {
-      console.error('게스트 로그인 오류:', error);
     }
   };
 
@@ -54,13 +53,42 @@ const EventsPage = () => {
     return (
       <>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1
-            className={`text-4xl font-bold text-center transition-colors duration-300 -mt-4 ${
-              dark ? "text-white" : "text-gray-900"
-            }`}
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            イベント&ゲーム
-          </h1>
+            <motion.div
+              className="flex items-center justify-center mb-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mr-4 ${
+                dark ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30' : 'bg-gradient-to-br from-cyan-100 to-blue-100 border border-cyan-200'
+              }`}>
+                <svg className="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h1 className={`text-5xl font-black bg-gradient-to-r ${
+                dark ? 'from-cyan-400 via-blue-400 to-cyan-500' : 'from-cyan-600 via-blue-600 to-cyan-700'
+              } bg-clip-text text-transparent`}>
+                EVENTS
+              </h1>
+            </motion.div>
+            <motion.p
+              className={`text-lg font-medium ${
+                dark ? 'text-gray-400' : 'text-gray-600'
+              }`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              ゲームをプレイして楽しもう
+            </motion.p>
+          </motion.div>
         </div>
 
         {/* 인증 선택 모달 */}
@@ -70,58 +98,93 @@ const EventsPage = () => {
               className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-500"
               onClick={() => setShowAuthModal(false)}
             ></div>
-            <div className={`relative w-full max-w-md mx-4 p-6 rounded-lg shadow-xl transition-all duration-500 transform ${
-              dark ? 'bg-gray-800' : 'bg-white'
-            }`}>
+            <motion.div 
+              className={`relative w-full max-w-md mx-4 p-6 rounded-lg shadow-xl ${
+                dark ? 'bg-gray-800' : 'bg-white'
+              }`}
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
               <div className="text-center">
-                <h2 className={`text-2xl font-bold mb-4 ${dark ? 'text-white' : 'text-gray-900'}`}>
+                <motion.h2 
+                  className={`text-2xl font-bold mb-4 ${dark ? 'text-white' : 'text-gray-900'}`}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
                   ゲームをプレイするには
-                </h2>
-                <p className={`text-sm mb-6 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
+                </motion.h2>
+                <motion.p 
+                  className={`text-sm mb-6 ${dark ? 'text-gray-300' : 'text-gray-600'}`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
                   ログインまたはゲストとしてプレイしてください
-                </p>
+                </motion.p>
                 
-                <div className="space-y-3">
-                  <button
+                <motion.div 
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <motion.button
                     onClick={handleLoginRedirect}
-                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:scale-105 ${
+                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
                       dark 
                         ? 'bg-cyan-600 text-white hover:bg-cyan-700' 
                         : 'bg-cyan-500 text-white hover:bg-cyan-600'
                     }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                   >
                     ログイン
-                  </button>
+                  </motion.button>
                   
-                  <button
+                  <motion.button
                     onClick={handleSignupRedirect}
-                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:scale-105 ${
+                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
                       dark 
                         ? 'bg-green-600 text-white hover:bg-green-700' 
                         : 'bg-green-500 text-white hover:bg-green-600'
                     }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                   >
                     会員登録
-                  </button>
+                  </motion.button>
                   
-                  <button
+                  <motion.button
                     onClick={handleGuestLogin}
-                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-500 hover:scale-105 ${
+                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
                       dark 
                         ? 'bg-gray-600 text-white hover:bg-gray-700' 
                         : 'bg-gray-500 text-white hover:bg-gray-600'
                     }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                   >
                     ゲストとしてプレイ
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
                 
-                <div className={`mt-4 p-3 rounded-lg text-xs ${dark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-100 text-yellow-800'}`}>
+                <motion.div 
+                  className={`mt-4 p-3 rounded-lg text-xs ${dark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-100 text-yellow-800'}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
                   <p className="font-medium">⚠️ ゲストでプレイする場合</p>
                   <p className="mt-1">記録が残らず、ランキングに参加できません。</p>
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </div>
         )}
       </>
@@ -157,16 +220,42 @@ const EventsPage = () => {
 
         {/* 컨텐츠 영역 */}
         <div className="relative z-10 p-8">
-      <motion.h1
-        className={`text-4xl font-bold text-center transition-colors duration-300 -mt-4 ${
-          dark ? "text-white" : "text-gray-900"
-        }`}
-        initial={{ scale: 0.9 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+      <motion.div
+        className="text-center mb-12"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        イベント&ゲーム
-      </motion.h1>
+        <motion.div
+          className="flex items-center justify-center mb-4"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mr-4 ${
+            dark ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30' : 'bg-gradient-to-br from-cyan-100 to-blue-100 border border-cyan-200'
+          }`}>
+            <svg className="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h1 className={`text-5xl font-black bg-gradient-to-r ${
+            dark ? 'from-cyan-400 via-blue-400 to-cyan-500' : 'from-cyan-600 via-blue-600 to-cyan-700'
+          } bg-clip-text text-transparent`}>
+            EVENTS
+          </h1>
+        </motion.div>
+        <motion.p
+          className={`text-lg font-medium ${
+            dark ? 'text-gray-400' : 'text-gray-600'
+          }`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          ゲームをプレイして楽しもう
+        </motion.p>
+      </motion.div>
 
       {/* 사용자 상태 표시 영역 */}
       <motion.div 
