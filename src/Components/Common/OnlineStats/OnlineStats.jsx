@@ -30,74 +30,70 @@ const OnlineStats = () => {
 
   return (
     <motion.div
-      className={`p-4 rounded-xl ${dark ? 'bg-gray-800/90' : 'bg-white/90'} shadow-lg backdrop-blur-sm border ${dark ? 'border-gray-700' : 'border-gray-200'}`}
+      className={`p-6 rounded-xl ${dark ? 'bg-gray-800/90' : 'bg-white/90'} shadow-lg backdrop-blur-sm border ${dark ? 'border-gray-700' : 'border-gray-200'}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       whileHover={{ scale: 1.02, y: -2 }}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col space-y-6">
         {/* 온라인 사용자 */}
         <motion.div
-          className="flex items-center space-x-3"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex flex-col items-center text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <motion.div
-            className={`p-2 rounded-full ${dark ? 'bg-cyan-900/30' : 'bg-cyan-100'}`}
+            className={`p-3 rounded-full ${dark ? 'bg-cyan-900/30' : 'bg-cyan-100'} mb-3`}
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.2 }}
           >
-            <Activity className={`w-5 h-5 ${dark ? 'text-cyan-400' : 'text-cyan-500'}`} />
+            <Activity className={`w-6 h-6 ${dark ? 'text-cyan-400' : 'text-cyan-500'}`} />
           </motion.div>
-          <div>
-            <div className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-              オンライン
-            </div>
-            <motion.div
-              className={`text-lg font-bold ${dark ? 'text-cyan-400' : 'text-cyan-500'}`}
-              key={onlineCount}
-              initial={{ scale: 1.2 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {onlineCount}人
-            </motion.div>
+          <div className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+            オンライン
           </div>
+          <motion.div
+            className={`text-3xl font-bold ${dark ? 'text-cyan-400' : 'text-cyan-500'}`}
+            key={onlineCount}
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {onlineCount}人
+          </motion.div>
         </motion.div>
 
         {/* 구분선 */}
-        <div className={`w-px h-12 ${dark ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+        <div className={`w-full h-px ${dark ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
 
         {/* 총 방문자 */}
         <motion.div
-          className="flex items-center space-x-3"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex flex-col items-center text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <motion.div
-            className={`p-2 rounded-full ${dark ? 'bg-cyan-900/30' : 'bg-cyan-100'}`}
+            className={`p-3 rounded-full ${dark ? 'bg-cyan-900/30' : 'bg-cyan-100'} mb-3`}
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.2 }}
           >
-            <Globe className={`w-5 h-5 ${dark ? 'text-cyan-400' : 'text-cyan-500'}`} />
+            <Globe className={`w-6 h-6 ${dark ? 'text-cyan-400' : 'text-cyan-500'}`} />
           </motion.div>
-          <div>
-            <div className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-              総訪問者
-            </div>
-            <div className={`text-lg font-bold ${dark ? 'text-cyan-400' : 'text-cyan-500'}`}>
-              {totalVisitors.toLocaleString()}人
-            </div>
+          <div className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+            総訪問者
+          </div>
+          <div className={`text-3xl font-bold ${dark ? 'text-cyan-400' : 'text-cyan-500'}`}>
+            {totalVisitors.toLocaleString()}人
           </div>
         </motion.div>
       </div>
 
       {/* 실시간 상태 표시 */}
       <motion.div
-        className="flex items-center justify-center mt-3 pt-3 border-t border-dashed border-gray-300 dark:border-gray-600"
+        className="flex items-center justify-center mt-6 pt-4 border-t border-dashed border-gray-300 dark:border-gray-600"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}

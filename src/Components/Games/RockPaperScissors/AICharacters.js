@@ -8,8 +8,7 @@ export const AI_CHARACTERS = [
     points: 1,
     avatar: '/yuu.png',
     color: 'bg-green-500',
-    description: '初心者向け・1点+ボーナス',
-    personality: '優しくて親切な指導者',
+    description: '無邪気でいたずら好きなかわいい妹キャラ',
     aiPattern: 'random' // 랜덤 선택으로 쉬움
   },
   {
@@ -20,8 +19,7 @@ export const AI_CHARACTERS = [
     points: 2,
     avatar: '/karin.png',
     color: 'bg-blue-500',
-    description: 'バランス型・2点+連勝ボーナス',
-    personality: '冷静で公平な対戦相手',
+    description: '明るくて友達が多い、水泳部のお姉さんタイプ',
     aiPattern: 'balanced' // 약간의 패턴이 있지만 균형적
   },
   {
@@ -32,8 +30,7 @@ export const AI_CHARACTERS = [
     points: 3,
     avatar: '/cocoa.png',
     color: 'bg-red-500',
-    description: '上級者向け・3点+連勝ボーナス',
-    personality: '戦略的で計算高い',
+    description: 'ちょっとバカっぽいオタク系チアガール',
     aiPattern: 'counter' // 상대방 선택을 카운터하는 패턴
   },
   {
@@ -44,8 +41,7 @@ export const AI_CHARACTERS = [
     points: 4,
     avatar: '/chihuu.png',
     color: 'bg-sky-400',
-    description: '最強・4点+連勝ボーナス',
-    personality: '完璧主義のプロゲーマー',
+    description: 'クールで優しくて、なんでも許してくれそうなお姉さん',
     aiPattern: 'advanced' // 고급 패턴 인식 및 대응
   }
 ]

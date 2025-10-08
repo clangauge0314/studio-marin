@@ -225,7 +225,7 @@ const MainPage = () => {
             <div className="flex items-center space-x-3">
               <MessageCircle className={`w-5 h-5 ${dark ? 'text-cyan-400' : 'text-cyan-600'}`} />
               <h2 className={`text-lg font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>
-                Live Chat
+              学祭 Live Chat
               </h2>
               <div className={`px-2 py-1 rounded-full text-xs font-medium ${
                 dark ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-100 text-cyan-700'
@@ -425,7 +425,7 @@ const MainPage = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <TwitterTweetEmbed
-                tweetId="1083592734038929408"
+                tweetId="1962796575731925061"
                 placeholder={
                   <div className={`p-4 rounded-lg ${
                     dark ? 'bg-gray-800' : 'bg-gray-100'

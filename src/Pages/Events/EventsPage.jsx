@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import useDarkModeStore from "../../Store/useDarkModeStore";
 import { useAuth } from "../../Contexts/AuthContext";
 import RockPaperScissors from "../../Components/Games/RockPaperScissors/RockPaperScissors";
+import MusicPlayer from "../../Components/Common/MusicPlayer/MusicPlayer";
 
 const EventsPage = () => {
   const { dark } = useDarkModeStore();
@@ -11,6 +12,8 @@ const EventsPage = () => {
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isGuestMode, setIsGuestMode] = useState(false);
+  const [selectedAI, setSelectedAI] = useState(null);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
 
   // 로그인하지 않았으면 모달 표시
   useEffect(() => {
@@ -257,6 +260,16 @@ const EventsPage = () => {
         </motion.p>
       </motion.div>
 
+      {/* 음악 플레이어 */}
+      <motion.div
+        className="flex justify-center mb-8"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <MusicPlayer autoPlay={shouldAutoPlay} isInline={true} dark={dark} />
+      </motion.div>
+
       {/* 사용자 상태 표시 영역 */}
       <motion.div 
         className={`mt-6 mb-8 p-4 rounded-lg transition-all duration-500 ${
@@ -314,7 +327,12 @@ const EventsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <RockPaperScissors />
+            <RockPaperScissors 
+              onAISelected={(ai) => {
+                setSelectedAI(ai);
+                setShouldAutoPlay(true);
+              }}
+            />
           </motion.div>
         </div>
       </motion.div>

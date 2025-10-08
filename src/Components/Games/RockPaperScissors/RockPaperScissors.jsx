@@ -6,6 +6,7 @@ import { db } from '../../../firebase/config'
 import useDarkModeStore from '../../../Store/useDarkModeStore'
 import { useAuth } from '../../../Contexts/AuthContext'
 import { AI_CHARACTERS } from './AICharacters'
+import { useSoundEffect } from '../../../hooks/useSoundEffect'
 
 // 컴포넌트 imports
 import GameHeader from './GameHeader'
@@ -13,15 +14,22 @@ import GameArea from './GameArea'
 import GameResult from './GameResult'
 import GameControls from './GameControls'
 import AISelectionScreen from './AISelectionScreen'
+import MusicPlayer from '../../Common/MusicPlayer/MusicPlayer'
 
 // 메인 RockPaperScissors 컴포넌트
-const RockPaperScissors = () => {
+const RockPaperScissors = ({ onAISelected }) => {
   const { dark } = useDarkModeStore()
   const { currentUser, userProfile } = useAuth()
+  const { playSound, initSounds } = useSoundEffect()
   
   const [selectedAI, setSelectedAI] = useState(null)
   const [userBestStreak, setUserBestStreak] = useState(0)
   const [isLoadingStreak, setIsLoadingStreak] = useState(true)
+
+  // 효과음 초기화
+  useEffect(() => {
+    initSounds()
+  }, [])
   
   const [gameState, setGameState] = useState({
     playerChoice: null,
@@ -191,6 +199,9 @@ const RockPaperScissors = () => {
   const handlePlayerChoice = (choice) => {
     if (gameState.isPlaying || gameState.isGameOver || gameState.isCooldown) return
     
+    // 선택 효과음 재생
+    playSound('choose')
+    
     setGameState(prev => ({
       ...prev,
       playerChoice: choice,
@@ -208,7 +219,11 @@ const RockPaperScissors = () => {
         let newTotalPoints = prev.totalPoints
         let isGameOver = false
         
+        // 결과에 따른 효과음 재생
         if (result === 'player') {
+          // 승리 효과음
+          setTimeout(() => playSound('win'), 300)
+          
           // 승리 시 연승 증가 및 포인트 획득
           newWinStreak++
           if (newWinStreak > newBestStreak) {
@@ -228,11 +243,17 @@ const RockPaperScissors = () => {
             toast.success(`+${totalPoints}ポイント獲得！`)
           }
         } else if (result === 'ai') {
+          // 패배 효과음
+          setTimeout(() => playSound('lose'), 300)
+          
           // 패배 시 게임 종료
           isGameOver = true
           if (prev.winStreak > newBestStreak) {
             newBestStreak = prev.winStreak
           }
+        } else if (result === 'tie') {
+          // 무승부 효과음
+          setTimeout(() => playSound('draw'), 300)
         }
         // 무승부(tie)는 연승 유지하고 계속 진행
         
@@ -366,6 +387,9 @@ const RockPaperScissors = () => {
   // AI 선택 핸들러
   const handleSelectAI = (ai) => {
     setSelectedAI(ai)
+    if (onAISelected) {
+      onAISelected(ai)
+    }
   }
 
   // AI 변경 핸들러

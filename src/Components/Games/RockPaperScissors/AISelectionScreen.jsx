@@ -137,11 +137,8 @@ const AISelectionScreen = ({ onSelectAI, dark }) => {
                     <h3 className="text-xl sm:text-2xl font-black text-white mb-1">{ai.name}</h3>
                   </div>
                   
-                  {/* 성격 */}
-                  <p className="text-xs sm:text-sm text-white/90 mb-2 sm:mb-3 font-medium">{ai.personality}</p>
-                  
                   {/* 설명 */}
-                  <p className="text-xs text-white/80 mb-3">{ai.description}</p>
+                  <p className="text-sm text-white/80 mb-3">{ai.description}</p>
                   
                   {/* 난이도 & 승률 */}
                   <div className="space-y-1">
